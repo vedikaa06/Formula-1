@@ -1,6 +1,7 @@
 import streamlit as st
 import base64
 
+# Team Palette
 TEAM_COLORS = {
     'Ferrari': '#FF2800', 'Mercedes': '#00D2BE', 'Red Bull': '#0600EF',
     'McLaren': '#FF8700', 'Aston Martin': '#006F62', 'Alpine': '#0090FF',
@@ -18,32 +19,41 @@ def get_base64(bin_file):
         return None
 
 def inject_base_css():
-    """Injects Orbitron font, base64 background image, and transitions."""
+    """Injects Orbitron font and base64 background image watermark."""
     img_b64 = get_base64("background.jpg")
-    bg_css = f"background-image: url('data:image/jpg;base64,{img_b64}');" if img_b64 else ""
+    bg_style = f"background-image: url('data:image/jpg;base64,{img_b64}');" if img_b64 else ""
 
     st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-    * {{ font-family: 'Orbitron', sans-serif; }}
+    
+    * {{ font-family: 'Orbitron', sans-serif !important; }}
 
     .stApp {{
         transition: background-color 0.8s ease-in-out;
         background-color: #000000;
-        {bg_css}
+        {bg_style}
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
         color: white;
     }}
     
-    /* Overlay to make text readable over the image */
+    /* Watermark Effect Overlay */
     .stApp::before {{
         content: "";
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.85); /* Adjust opacity for watermark effect */
+        background: rgba(0, 0, 0, 0.85); 
         z-index: -1;
+    }}
+
+    .f1-card {{
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        border-left: 5px solid #E10600;
+        margin-bottom: 15px;
     }}
     </style>
     """, unsafe_allow_html=True)
