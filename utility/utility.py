@@ -10,58 +10,55 @@ TEAM_COLORS = {
 }
 
 def inject_base_css():
-    """Sets the core theme: Black, White, Red with smooth transitions."""
+    """Injects Orbitron font, background watermark, and smooth transitions."""
     st.markdown("""
     <style>
-    /* Smooth global transitions for background changes */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+    * { font-family: 'Orbitron', sans-serif; }
+
     .stApp {
-        transition: background-color 0.8s ease-in-out, color 0.5s ease;
+        transition: background-color 0.8s ease-in-out;
         background-color: #000000;
         color: white;
     }
 
-    /* Section-specific background tones */
-    .section-home { background: #000000; }
-    .section-hof { background: #0a0a0a; border-top: 1px solid #333; }
-    
-    /* Premium Card Design */
+    /* Background Image Watermark */
+    .stApp::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); /* Fallback pattern */
+        background-image: url('file/background.jpg'); 
+        background-size: cover;
+        background-position: center;
+        opacity: 0.08;
+        z-index: -1;
+    }
+
     .f1-card {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 15px;
         padding: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.3s ease;
+        border-left: 5px solid #E10600;
+        transition: transform 0.3s ease;
     }
-    .f1-card:hover {
-        transform: translateY(-5px);
-        background: rgba(255, 255, 255, 0.1);
-        border-color: #E10600;
-    }
-
-    /* Watermark */
-    .watermark {
-        position: fixed; top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 25vw; font-weight: 900;
-        color: rgba(255, 255, 255, 0.02);
-        z-index: -1; pointer-events: none;
-    }
+    .f1-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.1); }
     </style>
-    <div class="watermark">F1</div>
     """, unsafe_allow_html=True)
 
 def apply_dynamic_background(color_hex, opacity="22"):
-    """Injects a style override for the current page state."""
+    """Smoothly transitions the background color based on selection."""
     st.markdown(f"""
     <style>
     .stApp {{
-        background: linear-gradient(135deg, #000000 60%, {color_hex}{opacity} 100%) !important;
+        background: linear-gradient(135deg, #000000 65%, {color_hex}{opacity} 100%) !important;
     }}
     </style>
     """, unsafe_allow_html=True)
 
 def get_score_color(score):
-    """Dynamic coloring for the ML Predictor."""
-    if score >= 85: return "#00FF41" # Elite Green
-    if score >= 60: return "#FFD700" # Solid Gold
-    return "#E10600" # High Risk Red
+    """Returns color based on prediction probability."""
+    if score >= 85: return "#00FF41" # Green
+    if score >= 60: return "#FFD700" # Gold
+    return "#E10600" # Red
