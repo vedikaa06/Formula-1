@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
-from utility.unility import inject_base_css, apply_dynamic_background, TEAM_COLORS, get_score_color
+from utility.utility import inject_base_css, apply_dynamic_background, TEAM_COLORS, get_score_color
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="F1 Velocity Hub", layout="wide")
