@@ -10,7 +10,7 @@ st.set_page_config(page_title="F1 Velocity Hub", layout="wide")
 # 1. Load Data
 @st.cache_data
 def load_data():
-    path = os.path.join('datase', 'f1_master_dataset.csv')
+    path = os.path.join('dataset', 'f1_master_dataset.csv')
     return pd.read_csv(path)
 
 df = load_data()
