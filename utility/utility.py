@@ -16,7 +16,7 @@ def get_base64_image(image_path):
             return base64.b64encode(img_file.read()).decode()
     return None
 
-def inject_base_css():
+def inject_base_css(is_home=False):
     """Applies elite F1 styling with strict black text for light backgrounds."""
     bin_str = get_base64_image("image/background.jpg")
     bg_img_css = f"background-image: url('data:image/jpg;base64,{bin_str}');" if bin_str else ""
