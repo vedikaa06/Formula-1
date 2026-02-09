@@ -98,3 +98,14 @@ def apply_dynamic_background(color_hex, opacity="15"):
     }}
     </style>
     """, unsafe_allow_html=True)
+
+def get_score_color(percentage):
+    """Returns a color hex based on the win probability percentage."""
+    if percentage > 75:
+        return "#00FF41"  # F1 Green
+    elif percentage > 50:
+        return "#FFD700"  # Gold
+    elif percentage > 25:
+        return "#FF8700"  # McLaren Orange
+    else:
+        return "#E10600"  # F1 Red
