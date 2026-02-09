@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 from utility.utility import inject_base_css, apply_dynamic_background, TEAM_COLORS
+from utility.ml_model import get_ml_prediction # Live training function
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="F1 Velocity Hub", layout="wide")
@@ -80,6 +81,35 @@ elif st.session_state.page == "Search Hub":
         </div>
     """, unsafe_allow_html=True)
 
-elif st.session_state.page == "ML Predictor":
-    st.markdown("<h1 style='color: #E10600;'>🤖 AI PREDICTOR</h1>", unsafe_allow_html=True)
-    # Your prediction inputs...
+elif selected == "ML Predictor":
+    inject_base_css(is_home=False)
+    st.header("🤖 AI WIN PREDICTOR")
+    
+    # Build Your Own Team Inputs
+    col_a, col_b, col_c = st.columns(3)
+    with col_a:
+        p_driver = st.selectbox("SELECT DRIVER", df['driver_full_name'].unique())
+    with col_b:
+        p_team = st.selectbox("SELECT TEAM", df['team_name'].unique())
+    with col_c:
+        p_circuit = st.selectbox("SELECT CIRCUIT", df['circuit_name'].unique())
+
+    if st.button("CALCULATE WIN PERCENTAGE"):
+        with st.spinner('Training AI & Calculating Probability...'):
+            # Calling your updated function that returns (win_prob, accuracy)
+            win_percentage, model_accuracy = get_ml_prediction(df, p_team, p_driver, p_circuit)
+            
+            # Dynamic background based on result
+            res_color = get_score_color(win_percentage)
+            apply_dynamic_background(res_color, "25")
+            
+            st.markdown(f"""
+                <div class="f1-card" style="text-align: center; border-bottom: 5px solid {res_color};">
+                    <h2 style="color: white;">WIN PROBABILITY</h2>
+                    <h1 style="color: {res_color}; font-size: 80px;">{win_percentage}%</h1>
+                    <p style="color: #00FF41; font-weight: bold; font-size: 20px;">MODEL ACCURACY: {model_accuracy}%</p>
+                    <p style="color: grey; font-size: 12px; margin-top: 10px;">
+                        The model accuracy is calculated using a 20% test split from the historical 70+ year dataset.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
